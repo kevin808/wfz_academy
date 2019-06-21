@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.ui.view" id="course_form_view">
             <field name="name">course.form</field>
@@ -12,17 +12,17 @@
                             <field name="responsible_id"/>
                         </group>
                         <notebook>
-                            <page string="Description">
-                                <field name="description"/>
-                            </page>
                             <page string="Sessions">
                                 <field name="session_ids">
-                                    <tree string="Registered sessions">
-                                        <field name="name"/>
+                                    <tree string="Registered sessions" editable="bottom">
+                                        <field name="name" options="{'no_create_edit': True}"/>
                                         <field name="instructor_id"/>
                                         <field name="active"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Description">
+                                <field name="description"/>
                             </page>                            
                             <page string="About">
                                 This is an example of notebooks
@@ -101,11 +101,12 @@
                                 <field name="course_id"/>
                                 <field name="name"/>
                                 <field name="instructor_id"/>
+                                <field name="seats"/>
                             </group>
                             <group string="Schedule">
                                 <field name="start_date"/>
                                 <field name="duration"/>
-                                <field name="seats"/>
+                                <field name="end_date" readonly="1"/>
                                 <field name="taken_seats" widget="progressbar"/>
                             </group>
                         </group>
@@ -271,4 +272,4 @@
                     target="new"
                     key2="client_action_multi"/>
     </data>
-</openerp>
+</odoo>

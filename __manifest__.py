@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Academy",
+    'name': "WFZ Academy",
 
     'summary': """
         Learning Odoo development with Kevin,
@@ -11,8 +11,7 @@
         it is a good way for you to learn.
     """,
 
-    'author': "Kevin Lee",
-    'website': "http://kevin808.lofter.com",
+    'author': "Kevin Li",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml

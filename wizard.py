@@ -1,4 +1,4 @@
-from openerp import models, fields, api
+from odoo import models, fields, api
 class Wizard(models.TransientModel):
     _name = 'openacademy.wizard'
 
