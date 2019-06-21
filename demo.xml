@@ -1,0 +1,46 @@
+<!-- <openerp>
+    <data>
+        
+          <record id="object0" model="academy.academy">
+            <field name="name">Object 0</field>
+          </record>
+        
+          <record id="object1" model="academy.academy">
+            <field name="name">Object 1</field>
+          </record>
+        
+          <record id="object2" model="academy.academy">
+            <field name="name">Object 2</field>
+          </record>
+        
+          <record id="object3" model="academy.academy">
+            <field name="name">Object 3</field>
+          </record>
+        
+          <record id="object4" model="academy.academy">
+            <field name="name">Object 4</field>
+          </record>
+        
+    </data>
+</openerp> -->
+
+<openerp>
+    <data>
+        <record model="openacademy.course" id="course0">
+            <field name="name">Course 1</field>
+            <field name="responsible_id">1</field>
+            <field name="description">Course 0's description
+
+Can have multiple lines
+            </field>
+        </record>
+        <record model="openacademy.course" id="course1">
+            <field name="name">Course 2</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="openacademy.course" id="course2">
+            <field name="name">Course 3</field>
+            <field name="description">Course 3's description</field>
+        </record>
+    </data>
+</openerp>
