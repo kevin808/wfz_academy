@@ -17,13 +17,13 @@
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'education',
-    'version': '8.0.1',
+    'version': '11.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base','board'],
 
     # always loaded
-    'data': [
+    'date': [
         'security/security.xml',
         'security/ir.model.access.csv',
         # 'templates.xml',

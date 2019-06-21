@@ -78,11 +78,6 @@ class Session(models.Model):
         self.state = 'confirmed'
 
     @api.one
-    def action_done(self):
-        self.state = 'done'
-
-
-    @api.one
     @api.depends('seats','attendee_ids')
     def _taken_seats(self):
     	if not self.seats:
