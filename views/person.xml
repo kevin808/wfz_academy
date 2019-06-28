@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <odoo>
+    <data>
+        <!-- instructor field view -->
+        <record model="ir.ui.view" id="partner_instructor_form_view">
+            <field name="name">person.instructor</field>
+            <field name="model">res.person</field>
+            <field name="arch" type="xml">
+                <form string="Course Form">
+                    <sheet>
+                        <group>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <notebook>
+                            <page string="Sessions">
+                                <group>
+                                    <field name="instructor"/>
+                                    <field name="session_ids"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="contact_list_action">
+            <field name="name">Contacts</field>
+            <field name="res_model">res.person</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="configuration_menu" name="Configuration"
+                  parent="main_openacademy_menu"/>
+        <menuitem id="contact_menu" name="Contacts"
+                  parent="configuration_menu"
+                  action="contact_list_action"/>
+
+        <!-- <record model="ir.actions.act_window" id="contact_cat_list_action">
+            <field name="name">Contact Tags</field>
+            <field name="res_model">res.person.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="contact_cat_menu" name="Contact Tags"
+                  parent="configuration_menu"
+                  action="contact_cat_list_action"/>
+
+        <record model="res.person.category" id="teacher1">
+            <field name="name">Teacher / Level 1</field>
+        </record>
+        <record model="res.person.category" id="teacher2">
+            <field name="name">Teacher / Level 2</field>
+        </record> -->
+
+    </data>
+</odoo>

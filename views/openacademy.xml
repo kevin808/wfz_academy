@@ -9,11 +9,11 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="responsible_id"/>
+                            <field name="responsible_id" options="{'no_create_edit': True}"/>
                         </group>
                         <notebook>
                             <page string="Sessions">
-                                <field name="session_ids">
+                                <field name="session_ids" readonly="1">
                                     <tree string="Registered sessions" editable="bottom">
                                         <field name="name" options="{'no_create_edit': True}"/>
                                         <field name="instructor_id"/>
@@ -150,7 +150,7 @@
             <field name="arch" type="xml">
                 <graph string="Participations by Courses">
                     <field name="course_id"/>
-                    <field name="attendee_count" type="measure"/>
+                    <field name="attendees_count" type="measure"/>
                 </graph>
             </field>
         </record>

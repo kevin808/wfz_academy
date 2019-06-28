@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, exceptions, _
-from datetime import timedelta
+import datetime
+
 
 class academy(models.Model):
     _name = 'openacademy.course'
@@ -10,7 +11,7 @@ class academy(models.Model):
     description = fields.Text()
 
     responsible_id = fields.Many2one('res.users',
-    	ondelete='set null', string="Responsible",index=True)
+                                     ondelete='set null', string="Responsible", index=True)
     session_ids = fields.One2many(
         'openacademy.session', 'course_id', string="Sessions")
 
@@ -39,34 +40,31 @@ class academy(models.Model):
     ]
 
 
-
-
 class Session(models.Model):
     _name = 'openacademy.session'
 
     name = fields.Char(required=True)
     start_date = fields.Date(default=fields.Date.today)
     duration = fields.Float(digits=(6, 2), help="Duration in days")
-    seats = fields.Integer(string="Number of seats",required=True)
+    seats = fields.Integer(string="Number of seats", required=True)
     active = fields.Boolean(default=True)
     color = fields.Integer()
-    instructor_id = fields.Many2one('res.partner', string="Instructor",
-        domain=['|', ('instructor', '=', True),
-                     ('category_id.name', 'ilike', "Teacher")])
+    instructor_id = fields.Many2one('res.person', string="Instructor",
+                                    domain=[('instructor', '=', True)])
     course_id = fields.Many2one('openacademy.course',
-        ondelete='cascade', string="Course", required=True)
-    attendee_ids = fields.Many2many('res.partner', string="Attendees")
+                                ondelete='cascade', string="Course", required=True)
+    attendee_ids = fields.Many2many('res.person', string="Attendees")
 
-    taken_seats = fields.Float(string="Taken seats",compute='_taken_seats')
-    end_date = fields.Date(string="End Date")
+    taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
+    end_date = fields.Date(string="End Date", compute='_set_end_date')
     hours = fields.Float(string="Duration in hours",
                          compute='_get_hours', inverse='_set_hours')
     attendees_count = fields.Integer(
-    	string="Attendees count", compute='_get_attendees_count', store=True)
+        string="Attendees count", compute='_get_attendees_count', store=True)
     state = fields.Selection([
-         ('draft', "Draft"),
-         ('confirmed', "Confirmed"),
-         ('done', "Done"),
+        ('draft', "Draft"),
+        ('confirmed', "Confirmed"),
+        ('done', "Done"),
     ])
 
     @api.one
@@ -78,33 +76,18 @@ class Session(models.Model):
         self.state = 'confirmed'
 
     @api.one
-    @api.depends('seats','attendee_ids')
+    def action_done(self):
+        self.state = 'done'
+
+    @api.one
+    @api.depends('seats', 'attendee_ids')
     def _taken_seats(self):
-    	if not self.seats:
-    		self.taken_seats = 0.0
-    	else:
-    		self.taken_seats = 100.0 * len(self.attendee_ids)/self.seats
+        if not self.seats:
+            self.taken_seats = 0.0
+        else:
+            self.taken_seats = 100.0 * len(self.attendee_ids) / self.seats
 
-
-    # @api.onchange('seats', 'attendee_ids')
-    # def _verify_valid_seats(self):
-    #     if self.seats < 0:
-    #         return {
-    #             'warning': {
-    #                 'title': _("Incorrect 'seats' value"),
-    #                 'message': _("The number of available seats may not be negative"),
-    #             },
-    #         }
-    #     if self.seats < len(self.attendee_ids):
-    #         return {
-    #             'warning': {
-    #                 'title': _("Too many attendees"),
-    #                 'message': _("Increase seats or remove excess attendees"),
-    #             },
-    #         }
-
-
-
+    # 视图里面没有添加hours，所以以下两个方法运行时并不会主动调用
     @api.one
     @api.depends('duration')
     def _get_hours(self):
@@ -115,20 +98,33 @@ class Session(models.Model):
         self.duration = self.hours / 24
 
     @api.one
+    @api.depends('duration', 'start_date')
+    def _set_end_date(self):
+        tmp = self.duration
+        if tmp != round(tmp):
+            # 这里加0.5，使得天数不为整数时，天数始终能加一
+            tmp = tmp + 0.5
+        self.end_date = datetime.datetime.strptime(
+            self.start_date, "%Y-%m-%d") + datetime.timedelta(days=round(tmp))
+
+    @api.one
     @api.depends('attendee_ids')
     def _get_attendees_count(self):
-    	self.attendees_count = len(self.attendee_ids)
+        self.attendees_count = len(self.attendee_ids)
 
     @api.one
     @api.constrains('instructor_id', 'attendee_ids')
     def _check_instructor_not_in_attendees(self):
         if self.instructor_id and self.instructor_id in self.attendee_ids:
-            raise exceptions.ValidationError(_("A session's instructor can't be an attendee"))
+            raise exceptions.ValidationError(
+                _("A session's instructor can't be an attendee"))
 
     @api.one
     @api.constrains('seats', 'attendee_ids')
     def _check_seats_and_attendees(self):
         if self.seats < 0:
-            raise exceptions.ValidationError(_("The number of available seats may not be negative"))                    
+            raise exceptions.ValidationError(
+                _("The number of available seats may not be negative"))
         if self.seats < len(self.attendee_ids):
-            raise exceptions.ValidationError(_("Increase seats or remove excess attendees"))
+            raise exceptions.ValidationError(
+                _("Increase seats or remove excess attendees"))
